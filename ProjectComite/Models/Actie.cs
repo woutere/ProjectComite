@@ -13,6 +13,6 @@ namespace ProjectComite.Models
         [ForeignKey("Gemeente")]
         public int GemeenteId { get; set; }
         public Gemeente gemeente { get; set; }
-        public ICollection<Lid> leden{get;set;}
+        public ICollection<ActieLid> leden{get;set;}
     }
 }

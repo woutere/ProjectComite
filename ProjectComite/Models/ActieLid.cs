@@ -9,6 +9,8 @@ namespace ProjectComite.Models
     {
         public int actieLidId { get; set; }
         public int actieId { get; set; }
+        public Actie actie { get; set; }
         public int lidId { get; set; }
+        public Lid lid { get; set; }
     }
 }
