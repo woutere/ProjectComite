@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectComite.Models;
 using ProjectComite.data;
+using ProjectComite.ViewModels;
 
 namespace ProjectComite.Controllers
 {
@@ -33,23 +34,31 @@ namespace ProjectComite.Controllers
             {
                 return NotFound();
             }
+            var viewmodel = new DetailLidViewModel();
+            viewmodel.lid = new Lid();
 
-            var lid = await _context.leden
+            viewmodel.lid = await _context.leden
                 .Include(l => l.gemeente)
                 .FirstOrDefaultAsync(m => m.lidId == id);
-            if (lid == null)
+            if (viewmodel.lid == null)
             {
                 return NotFound();
             }
+            //viewmodel.acties = await _context.acties
+            //    .Inclu
 
-            return View(lid);
+            return View(viewmodel);
+            //Later nog op terugkomenn
         }
 
         // GET: Leden/Create
         public IActionResult Create()
         {
-            ViewData["gemeenteId"] = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId");
-            return View();
+            var viewmodel = new CreateLidViewModel();
+            viewmodel.lid = new Lid();
+            viewmodel.gemeentes = new SelectList(_context.gemeenten);
+            viewmodel.acties = new SelectList(_context.acties);
+            return View(viewmodel);
         }
 
         // POST: Leden/Create
@@ -57,16 +66,18 @@ namespace ProjectComite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("lidId,naam,gemeenteId,lidgeldBetaald,emailAdres,telefoonnummer")] Lid lid)
+        public async Task<IActionResult> Create([Bind("lidId,naam,gemeenteId,lidgeldBetaald,emailAdres,telefoonnummer")] CreateLidViewModel viewmodel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(lid);
+                _context.Add(viewmodel.lid);
+                _context.Add(viewmodel.acties);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["gemeenteId"] = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId", lid.gemeenteId);
-            return View(lid);
+            ViewData["gemeenteId"] = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId", viewmodel.lid.gemeenteId);
+
+            return View(viewmodel);
         }
 
         // GET: Leden/Edit/5
