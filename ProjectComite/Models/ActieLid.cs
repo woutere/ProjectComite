@@ -7,10 +7,10 @@ namespace ProjectComite.Models
 {
     public class ActieLid
     {
-        public int actieLidId { get; set; }
+        //public int actieLidId { get; set; }
         public int actieId { get; set; }
-        public Actie actie { get; set; }
         public int lidId { get; set; }
+        public Actie actie { get; set; }
         public Lid lid { get; set; }
     }
 }

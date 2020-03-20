@@ -57,7 +57,7 @@ namespace ProjectComite.Controllers
             var viewmodel = new CreateLidViewModel();
             viewmodel.lid = new Lid();
             viewmodel.gemeentes = new SelectList(_context.gemeenten);
-            viewmodel.acties = new SelectList(_context.acties);
+            viewmodel.acties = _context.acties.ToList();
             return View(viewmodel);
         }
 
@@ -71,12 +71,19 @@ namespace ProjectComite.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(viewmodel.lid);
-                _context.Add(viewmodel.acties);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["gemeenteId"] = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId", viewmodel.lid.gemeenteId);
-
+            //viewmodel.acties = new SelectList(_context.acties, "actieId", "actieId");
+            foreach (Actie actie in viewmodel.acties.ToList())
+            {
+                ActieLid actielid=new ActieLid();
+                actielid.lidId = viewmodel.lid.lidId;
+                actielid.actieId = actie.actieId;
+                _context.Add(actielid);
+            }
+            
+            await _context.SaveChangesAsync();
             return View(viewmodel);
         }
 

@@ -1,4 +1,4 @@
-﻿@model ProjectComite.Models.Lid
+﻿@model ProjectComite.ViewModels.CreateLidViewModel
 
 @{
     ViewData["Title"] = "Create";
@@ -13,33 +13,40 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="naam" class="control-label"></label>
-                <input asp-for="naam" class="form-control" />
-                <span asp-validation-for="naam" class="text-danger"></span>
+                <label asp-for="lid.naam" class="control-label"></label>
+                <input asp-for="lid.naam" class="form-control" />
+                <span asp-validation-for="lid.naam" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="gemeenteId" class="control-label"></label>
-                <select asp-for="gemeenteId" class ="form-control" asp-items="ViewBag.gemeenteId"></select>
+                <label asp-for="lid.gemeente.naam" class="control-label"></label>
+                <select asp-for="lid.gemeenteId" class="form-control" asp-items="Model.gemeentes"></select>
             </div>
             <div class="form-group">
                 <div class="checkbox">
                     <label>
-                        <input asp-for="lidgeldBetaald" /> @Html.DisplayNameFor(model => model.lidgeldBetaald)
+                        <input asp-for="lid.lidgeldBetaald" /> @Html.DisplayNameFor(model => model.lid.lidgeldBetaald)
                     </label>
                 </div>
             </div>
             <div class="form-group">
-                <label asp-for="emailAdres" class="control-label"></label>
-                <input asp-for="emailAdres" class="form-control" />
-                <span asp-validation-for="emailAdres" class="text-danger"></span>
+                <label asp-for="lid.emailAdres" class="control-label"></label>
+                <input asp-for="lid.emailAdres" class="form-control" />
+                <span asp-validation-for="lid.emailAdres" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="telefoonnummer" class="control-label"></label>
-                <input asp-for="telefoonnummer" class="form-control" />
-                <span asp-validation-for="telefoonnummer" class="text-danger"></span>
+                <label asp-for="lid.telefoonnummer" class="control-label"></label>
+                <input asp-for="lid.telefoonnummer" class="form-control" />
+                <span asp-validation-for="lid.telefoonnummer" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+            <div class="form-group">
+                <label asp-for="lid.actieleden" class="control-label"></label>
+                @foreach(var actie in Model.acties)
+                {
+                    <input type="checkbox" asp-for="lid.actieleden" />
+                }
             </div>
         </form>
     </div>
