@@ -9,14 +9,14 @@ using ProjectComite.data;
 namespace ProjectComite.Migrations
 {
     [DbContext(typeof(ComiteContext))]
-    [Migration("20200311140340_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20200321130918_Initialcreate")]
+    partial class Initialcreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.1.8-servicing-32085")
+                .HasAnnotation("ProductVersion", "2.1.14-servicing-32113")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -39,17 +39,11 @@ namespace ProjectComite.Migrations
 
             modelBuilder.Entity("ProjectComite.Models.ActieLid", b =>
                 {
-                    b.Property<int>("actieLidId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
                     b.Property<int>("actieId");
 
                     b.Property<int>("lidId");
 
-                    b.HasKey("actieLidId");
-
-                    b.HasIndex("actieId");
+                    b.HasKey("actieId", "lidId");
 
                     b.HasIndex("lidId");
 
@@ -110,7 +104,7 @@ namespace ProjectComite.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ProjectComite.Models.Lid", "lid")
-                        .WithMany("acties")
+                        .WithMany("actieleden")
                         .HasForeignKey("lidId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

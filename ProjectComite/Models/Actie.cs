@@ -9,6 +9,7 @@ namespace ProjectComite.Models
     public class Actie
     {
         public int actieId { get; set; }
+        public String Naam { get; set; }
         public string informatie { get; set; }
         [ForeignKey("Gemeente")]
         public int GemeenteId { get; set; }

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProjectComite.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class Initialcreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -68,14 +68,12 @@ namespace ProjectComite.Migrations
                 name: "ActieLid",
                 columns: table => new
                 {
-                    actieLidId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     actieId = table.Column<int>(nullable: false),
                     lidId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_ActieLid", x => x.actieLidId);
+                    table.PrimaryKey("PK_ActieLid", x => new { x.actieId, x.lidId });
                     table.ForeignKey(
                         name: "FK_ActieLid_Actie_actieId",
                         column: x => x.actieId,
@@ -94,11 +92,6 @@ namespace ProjectComite.Migrations
                 name: "IX_Actie_GemeenteId",
                 table: "Actie",
                 column: "GemeenteId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_ActieLid_actieId",
-                table: "ActieLid",
-                column: "actieId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ActieLid_lidId",

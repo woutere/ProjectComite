@@ -26,6 +26,8 @@ namespace ProjectComite.Migrations
 
                     b.Property<int>("GemeenteId");
 
+                    b.Property<string>("Naam");
+
                     b.Property<string>("informatie");
 
                     b.HasKey("actieId");
@@ -40,8 +42,6 @@ namespace ProjectComite.Migrations
                     b.Property<int>("actieId");
 
                     b.Property<int>("lidId");
-
-                    b.Property<int>("actieLidId");
 
                     b.HasKey("actieId", "lidId");
 
@@ -104,7 +104,7 @@ namespace ProjectComite.Migrations
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("ProjectComite.Models.Lid", "lid")
-                        .WithMany("acties")
+                        .WithMany("actieleden")
                         .HasForeignKey("lidId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });

@@ -57,7 +57,7 @@ namespace ProjectComite
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("actieId,informatie,GemeenteId")] Actie actie)
+        public async Task<IActionResult> Create([Bind("actieId,Naam,informatie,GemeenteId")] Actie actie)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +91,7 @@ namespace ProjectComite
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("actieId,informatie,GemeenteId")] Actie actie)
+        public async Task<IActionResult> Edit(int id, [Bind("actieId,Naam,informatie,GemeenteId")] Actie actie)
         {
             if (id != actie.actieId)
             {

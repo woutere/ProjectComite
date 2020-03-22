@@ -1,7 +1,7 @@
 ﻿@model ProjectComite.ViewModels.CreateLidViewModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Creer nieuw lid";
 }
 
 <h2>Create</h2>
@@ -39,15 +39,17 @@
                 <span asp-validation-for="lid.telefoonnummer" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-            <div class="form-group">
                 <label asp-for="lid.actieleden" class="control-label"></label>
-                @foreach(var actie in Model.acties)
+                @foreach (var actie in Model.acties)
                 {
-                    <input type="checkbox" asp-for="lid.actieleden" />
+                    <label asp-for="lid.actieleden" class="control-label">@actie.</label>
+                    <input asp-for="lid.actieleden" class="form-control" type="radio" value="false" />
                 }
             </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+
         </form>
     </div>
 </div>
