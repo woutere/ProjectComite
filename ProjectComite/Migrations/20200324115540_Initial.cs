@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ProjectComite.Migrations
 {
-    public partial class Initialcreate : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -27,6 +27,7 @@ namespace ProjectComite.Migrations
                 {
                     actieId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Naam = table.Column<string>(nullable: true),
                     informatie = table.Column<string>(nullable: true),
                     GemeenteId = table.Column<int>(nullable: false)
                 },

@@ -15,5 +15,8 @@ namespace ProjectComite.Models
         public int GemeenteId { get; set; }
         public Gemeente gemeente { get; set; }
         public ICollection<ActieLid> leden{get;set;}
+
+        [NotMapped]
+        public bool CheckboxAnswer { get; set; }
     }
 }

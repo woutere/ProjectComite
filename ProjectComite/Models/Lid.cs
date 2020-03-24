@@ -17,5 +17,8 @@ namespace ProjectComite.Models
         public bool lidgeldBetaald { get; set; }
         public string emailAdres { get; set; }
         public string telefoonnummer { get; set; }
+
+        [NotMapped]
+        public bool CheckboxAnswer { get; set; }
     }
 }

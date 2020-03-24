@@ -18,6 +18,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.gemeente)
             </th>
+            @* Alleen zichtbaar voor admins maken *@
             <th>
                 @Html.DisplayNameFor(model => model.lidgeldBetaald)
             </th>
@@ -27,7 +28,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.telefoonnummer)
             </th>
-            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -39,6 +39,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.gemeente.gemeenteId)
             </td>
+            @* Alleen zichtbaar voor admins maken *@
             <td>
                 @Html.DisplayFor(modelItem => item.lidgeldBetaald)
             </td>

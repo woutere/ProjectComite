@@ -9,8 +9,8 @@ using ProjectComite.data;
 namespace ProjectComite.Migrations
 {
     [DbContext(typeof(ComiteContext))]
-    [Migration("20200321130918_Initialcreate")]
-    partial class Initialcreate
+    [Migration("20200324115540_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,6 +27,8 @@ namespace ProjectComite.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<int>("GemeenteId");
+
+                    b.Property<string>("Naam");
 
                     b.Property<string>("informatie");
 

@@ -11,6 +11,6 @@ namespace ProjectComite.ViewModels
     {
         public Lid lid { get; set; }
         public SelectList gemeentes { get; set; }
-        public ICollection<Actie> acties { get; set; }
+        public List<Actie> acties { get; set; }
     }
 }

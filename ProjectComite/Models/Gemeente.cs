@@ -10,6 +10,11 @@ namespace ProjectComite.Models
         public int gemeenteId { get; set; }
         public string naam { get; set; }
         public string postcode { get; set; }
-        public ICollection<Lid> leden { get; set; }   
+        public ICollection<Lid> leden { get; set; }
+
+        public override string ToString()
+        {
+            return naam;
+        }
     }
 }

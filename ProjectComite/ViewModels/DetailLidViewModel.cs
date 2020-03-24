@@ -10,6 +10,6 @@ namespace ProjectComite.ViewModels
     public class DetailLidViewModel
     {
         public Lid lid { get; set; }
-        public SelectList acties { get; set; }
+        public List<Actie> acties { get; set; }
     }
 }

@@ -10,7 +10,7 @@ namespace ProjectComite.ViewModels
     public class EditLidViewModel
     {
         public Lid lid { get; set; }
-        public SelectList Gemeentes { get; set; }
-        public SelectList acties { get; set; }
+        public SelectList gemeentes { get; set; }
+        public List<Actie> acties { get; set; }
     }
 }

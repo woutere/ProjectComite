@@ -35,20 +35,20 @@ namespace ProjectComite.Controllers
                 return NotFound();
             }
             var viewmodel = new DetailLidViewModel();
-            viewmodel.lid = new Lid();
 
-            viewmodel.lid = await _context.leden
+            Lid lid = await _context.leden
                 .Include(l => l.gemeente)
                 .FirstOrDefaultAsync(m => m.lidId == id);
-            if (viewmodel.lid == null)
+            if (lid == null)
             {
                 return NotFound();
             }
-            //viewmodel.acties = await _context.acties
-            //    .Inclu
-
+            viewmodel.lid = lid;
+            viewmodel.acties = new List<Actie>(from s in _context.acties
+                                               join ss in _context.actieleden on s.actieId equals ss.actieId
+                                               where ss.lidId == id
+                                               select s).ToList();
             return View(viewmodel);
-            //Later nog op terugkomenn
         }
 
         // GET: Leden/Create
@@ -56,7 +56,7 @@ namespace ProjectComite.Controllers
         {
             var viewmodel = new CreateLidViewModel();
             viewmodel.lid = new Lid();
-            viewmodel.gemeentes = new SelectList(_context.gemeenten);
+            viewmodel.gemeentes = new SelectList(_context.gemeenten, "gemeenteId", "naam");
             viewmodel.acties = _context.acties.ToList();
             return View(viewmodel);
         }
@@ -66,24 +66,20 @@ namespace ProjectComite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("lidId,naam,gemeenteId,lidgeldBetaald,emailAdres,telefoonnummer")] CreateLidViewModel viewmodel)
+        public async Task<IActionResult> Create(CreateLidViewModel viewmodel)
         {
             if (ModelState.IsValid)
             {
+                viewmodel.lid.actieleden = new List<ActieLid>();
+
+                foreach (var actie in viewmodel.acties.Where(a => a.CheckboxAnswer == true))
+                {
+                    viewmodel.lid.actieleden.Add(new ActieLid() { actieId = actie.actieId });
+                }
                 _context.Add(viewmodel.lid);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            //viewmodel.acties = new SelectList(_context.acties, "actieId", "actieId");
-            foreach (Actie actie in viewmodel.acties.ToList())
-            {
-                ActieLid actielid=new ActieLid();
-                actielid.lidId = viewmodel.lid.lidId;
-                actielid.actieId = actie.actieId;
-                _context.Add(actielid);
-            }
-            
-            await _context.SaveChangesAsync();
             return View(viewmodel);
         }
 
@@ -94,14 +90,22 @@ namespace ProjectComite.Controllers
             {
                 return NotFound();
             }
-
-            var lid = await _context.leden.FindAsync(id);
-            if (lid == null)
+            var viewmodel = new EditLidViewModel();
+            viewmodel.lid = await _context.leden.FindAsync(id);
+            if (viewmodel.lid == null)
             {
                 return NotFound();
             }
-            ViewData["gemeenteId"] = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId", lid.gemeenteId);
-            return View(lid);
+            viewmodel.gemeentes = new SelectList(_context.gemeenten, "gemeenteId", "naam", viewmodel.lid.gemeenteId);
+            viewmodel.acties = _context.acties.ToList();
+            foreach (var actie in viewmodel.acties)
+            {
+                if (_context.actieleden.Any(al=>al.lidId== id && al.actieId==actie.actieId))
+                {
+                    actie.CheckboxAnswer = true;
+                }
+            }
+            return View(viewmodel);
         }
 
         // POST: Leden/Edit/5
@@ -109,9 +113,9 @@ namespace ProjectComite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("lidId,naam,gemeenteId,lidgeldBetaald,emailAdres,telefoonnummer")] Lid lid)
+        public async Task<IActionResult> Edit(int id,EditLidViewModel viewmodel)
         {
-            if (id != lid.lidId)
+            if (id != viewmodel.lid.lidId)
             {
                 return NotFound();
             }
@@ -120,12 +124,33 @@ namespace ProjectComite.Controllers
             {
                 try
                 {
-                    _context.Update(lid);
+                    _context.Update(viewmodel.lid);
+                    await _context.SaveChangesAsync();
+
+                    var currentActieLeden = _context.actieleden.Where(al => al.lidId == viewmodel.lid.lidId).ToList();
+                    for (int i = 0; i < viewmodel.acties.Count; i++)
+                    {
+                        if (viewmodel.acties[i].CheckboxAnswer == true)
+                        {
+                            if (!currentActieLeden.Any(al => al.actieId == viewmodel.acties[i].actieId && al.lidId == viewmodel.lid.lidId))
+                            {
+                                _context.Add(new ActieLid() { actieId = viewmodel.acties[i].actieId, lidId = viewmodel.lid.lidId });
+                            }
+                        }
+                        if (viewmodel.acties[i].CheckboxAnswer == false)
+                        {
+                            if (currentActieLeden.Any(al => al.actieId == viewmodel.acties[i].actieId && al.lidId == viewmodel.lid.lidId))
+                            {
+                                _context.Remove(currentActieLeden.FirstOrDefault(al => al.actieId == viewmodel.acties[i].actieId && al.lidId == viewmodel.lid.lidId));
+                            }
+                        }
+                    }
+                    viewmodel.gemeentes = new SelectList(_context.gemeenten, "gemeenteId", "naam", viewmodel.lid.gemeenteId);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!LidExists(lid.lidId))
+                    if (!LidExists(viewmodel.lid.lidId))
                     {
                         return NotFound();
                     }
@@ -136,8 +161,8 @@ namespace ProjectComite.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["gemeenteId"] = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId", lid.gemeenteId);
-            return View(lid);
+
+            return View(viewmodel);
         }
 
         // GET: Leden/Delete/5

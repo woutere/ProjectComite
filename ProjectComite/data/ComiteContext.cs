@@ -18,6 +18,7 @@ namespace ProjectComite.data
         public DbSet<Lid> leden { get; set; }
         public DbSet<Gemeente> gemeenten { get; set; }
         public DbSet<Actie> acties { get; set; }
+        public DbSet<ActieLid> actieleden { get; set; }
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
