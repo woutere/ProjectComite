@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectComite.Models;
 using ProjectComite.data;
+using ProjectComite.ViewModels;
 
 namespace ProjectComite.Controllers
 {
@@ -46,7 +47,11 @@ namespace ProjectComite.Controllers
         // GET: Gemeenten/Create
         public IActionResult Create()
         {
-            return View();
+            var viewmodel = new CreateGemeenteViewModel();
+            viewmodel.gemeente = new Gemeente();
+            viewmodel.leden = _context.leden.ToList();
+            viewmodel.acties = new SelectList(_context.acties, "actieId", "naam");
+            return View(viewmodel);
         }
 
         // POST: Gemeenten/Create
@@ -54,15 +59,27 @@ namespace ProjectComite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("gemeenteId,naam,postcode")] Gemeente gemeente)
+        public async Task<IActionResult> Create(CreateGemeenteViewModel viewmodel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(gemeente);
+                _context.Add(viewmodel.gemeente);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                foreach (var geselecteerdLid in viewmodel.leden)
+                {
+                    if (geselecteerdLid.CheckboxAnswer==true)
+                    {
+                        geselecteerdLid.gemeenteId = viewmodel.gemeente.gemeenteId;
+                        Lid lid = _context.leden.SingleOrDefault(l => l.lidId == geselecteerdLid.lidId);
+                        if (lid != null)
+                        {
+                            lid.gemeenteId = geselecteerdLid.gemeenteId;
+                        }
+                    }
+                    
+                }
             }
-            return View(gemeente);
+            return View(viewmodel);
         }
 
         // GET: Gemeenten/Edit/5

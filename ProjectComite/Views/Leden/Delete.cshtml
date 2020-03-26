@@ -1,4 +1,4 @@
-﻿@model ProjectComite.Models.Lid
+﻿@model ProjectComite.ViewModels.DeleteLidViewModel
 
 @{
     ViewData["Title"] = "Delete";
@@ -12,10 +12,10 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.naam)
+            @Html.DisplayNameFor(model => model.lid.naam)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.naam)
+            @Html.DisplayFor(model => model.lid.naam)
         </dd>
         <dt>
             @Html.DisplayNameFor(model => model.gemeente)
@@ -24,27 +24,33 @@
             @Html.DisplayFor(model => model.gemeente.gemeenteId)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.lidgeldBetaald)
+            @Html.DisplayNameFor(model => model.lid.lidgeldBetaald)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.lidgeldBetaald)
+            @Html.DisplayFor(model => model.lid.lidgeldBetaald)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.emailAdres)
+            @Html.DisplayNameFor(model => model.lid.emailAdres)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.emailAdres)
+            @Html.DisplayFor(model => model.lid.emailAdres)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.telefoonnummer)
+            @Html.DisplayNameFor(model => model.lid.telefoonnummer)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.telefoonnummer)
+            @Html.DisplayFor(model => model.lid.telefoonnummer)
         </dd>
+        <dt>Acties</dt>
+        @for (int i = 0; i < Model.acties.Count; i++)
+        {
+            <dd>°@Html.DisplayFor(model => model.acties[i].Naam) <a asp-controller="Acties" asp-action="Details" asp-route-id="@Model.acties[i].actieId"> details</a></dd>
+
+        }
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="lidId" />
+        <input type="hidden" asp-for="lid.lidId" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
         <a asp-action="Index">Back to List</a>
     </form>

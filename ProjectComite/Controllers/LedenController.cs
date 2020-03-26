@@ -166,7 +166,7 @@ namespace ProjectComite.Controllers
         }
 
         // GET: Leden/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id, DeleteLidViewModel viewmodel)
         {
             if (id == null)
             {
@@ -180,17 +180,35 @@ namespace ProjectComite.Controllers
             {
                 return NotFound();
             }
-
-            return View(lid);
+            viewmodel.lid = lid;
+            viewmodel.acties = new List<Actie>(from s in _context.acties
+                                               join ss in _context.actieleden on s.actieId equals ss.actieId
+                                               where ss.lidId == id
+                                               select s).ToList();
+            return View(viewmodel);
         }
 
         // POST: Leden/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, DeleteLidViewModel viewmodel)
         {
-            var lid = await _context.leden.FindAsync(id);
-            _context.leden.Remove(lid);
+            viewmodel.lid = await _context.leden.FindAsync(id);
+            _context.leden.Remove(viewmodel.lid);
+            viewmodel.acties =new List<Actie>(from s in _context.acties
+                                             join ss in _context.actieleden on s.actieId equals ss.actieId
+                                             where ss.lidId == id
+                                             select s).ToList();
+            if (!viewmodel.acties.Any())
+            {
+
+            }
+            foreach (var actie in viewmodel.acties)
+            {
+                ActieLid actieLid = _context.actieleden.FirstOrDefault(al => al.actieId == actie.actieId && al.lidId == viewmodel.lid.lidId);
+                _context.Remove(actieLid);
+            }
+            
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
