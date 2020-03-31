@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectComite.data;
 
 namespace ProjectComite.Migrations
 {
     [DbContext(typeof(ComiteContext))]
-    partial class ComiteContextModelSnapshot : ModelSnapshot
+    [Migration("20200327153041_RefactorGemeente")]
+    partial class RefactorGemeente
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -91,7 +93,7 @@ namespace ProjectComite.Migrations
             modelBuilder.Entity("ProjectComite.Models.Actie", b =>
                 {
                     b.HasOne("ProjectComite.Models.Gemeente", "gemeente")
-                        .WithMany("acties")
+                        .WithMany()
                         .HasForeignKey("GemeenteId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -112,7 +114,7 @@ namespace ProjectComite.Migrations
             modelBuilder.Entity("ProjectComite.Models.Lid", b =>
                 {
                     b.HasOne("ProjectComite.Models.Gemeente", "gemeente")
-                        .WithMany("leden")
+                        .WithMany()
                         .HasForeignKey("gemeenteId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

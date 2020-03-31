@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ProjectComite.Models;
 using ProjectComite.data;
+using ProjectComite.ViewModels;
 
 namespace ProjectComite
 {
@@ -48,8 +49,11 @@ namespace ProjectComite
         // GET: Acties/Create
         public IActionResult Create()
         {
-            ViewData["GemeenteId"] = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId");
-            return View();
+            CreateActieViewModel viewmodel = new CreateActieViewModel();
+            viewmodel.actie = new Actie();
+            viewmodel.gemeentes = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId");
+            viewmodel.leden = _context.leden.ToList();
+            return View(viewmodel);
         }
 
         // POST: Acties/Create
@@ -57,16 +61,20 @@ namespace ProjectComite
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("actieId,Naam,informatie,GemeenteId")] Actie actie)
+        public async Task<IActionResult> Create(CreateActieViewModel viewmodel)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(actie);
+                viewmodel.actie.leden = new List<ActieLid>();
+                foreach (var actie in viewmodel.leden.Where(a => a.CheckboxAnswer == true))
+                {
+                    viewmodel.actie.leden.Add(new ActieLid() { lidId = actie.lidId });
+                }
+                _context.Add(viewmodel.actie);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GemeenteId"] = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId", actie.GemeenteId);
-            return View(actie);
+            return View(viewmodel);
         }
 
         // GET: Acties/Edit/5

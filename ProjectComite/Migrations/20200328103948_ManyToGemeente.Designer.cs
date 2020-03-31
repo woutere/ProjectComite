@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectComite.data;
 
 namespace ProjectComite.Migrations
 {
     [DbContext(typeof(ComiteContext))]
-    partial class ComiteContextModelSnapshot : ModelSnapshot
+    [Migration("20200328103948_ManyToGemeente")]
+    partial class ManyToGemeente
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

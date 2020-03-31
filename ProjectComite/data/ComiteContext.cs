@@ -19,11 +19,12 @@ namespace ProjectComite.data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Lid>().ToTable("Lid");
-            modelBuilder.Entity<Gemeente>().ToTable("Gemeente");
+            modelBuilder.Entity<Gemeente>().ToTable("Gemeente").HasMany(l=> l.leden).WithOne(g=>g.gemeente);
+            modelBuilder.Entity<Gemeente>().HasMany(a => a.acties).WithOne(g => g.gemeente);
             modelBuilder.Entity<Actie>().ToTable("Actie");
             modelBuilder.Entity<ActieLid>().ToTable("ActieLid");
             base.OnModelCreating(modelBuilder);
-
+            
             modelBuilder.Entity<ActieLid>().HasKey(al => new { al.actieId, al.lidId });
             modelBuilder.Entity<ActieLid>().HasOne(o => o.actie).WithMany(s => s.leden).HasForeignKey(k => k.actieId).OnDelete(DeleteBehavior.Restrict);
             modelBuilder.Entity<ActieLid>().HasOne(o => o.lid).WithMany(s => s.actieleden).HasForeignKey(k => k.lidId).OnDelete(DeleteBehavior.Restrict);

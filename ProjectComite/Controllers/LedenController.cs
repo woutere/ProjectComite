@@ -54,7 +54,7 @@ namespace ProjectComite.Controllers
         // GET: Leden/Create
         public IActionResult Create()
         {
-            var viewmodel = new CreateLidViewModel();
+            CreateLidViewModel viewmodel = new CreateLidViewModel();
             viewmodel.lid = new Lid();
             viewmodel.gemeentes = new SelectList(_context.gemeenten, "gemeenteId", "naam");
             viewmodel.acties = _context.acties.ToList();

@@ -50,10 +50,10 @@ namespace ProjectComite.Controllers
             var viewmodel = new CreateGemeenteViewModel();
             viewmodel.gemeente = new Gemeente();
             viewmodel.leden = _context.leden.ToList();
-            viewmodel.acties = new SelectList(_context.acties, "actieId", "naam");
+            viewmodel.acties = _context.acties.ToList();
             return View(viewmodel);
         }
-
+            
         // POST: Gemeenten/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -63,21 +63,25 @@ namespace ProjectComite.Controllers
         {
             if (ModelState.IsValid)
             {
+                viewmodel.gemeente.leden = new List<Lid>();
+                foreach (Lid lid in viewmodel.leden)
+                {
+                    if (lid.CheckboxAnswer == true)
+                    {
+                        viewmodel.gemeente.leden.Add(lid);
+                    }
+                    viewmodel.gemeente.acties = new List<Actie>();
+                }
+                foreach (Actie actie in viewmodel.acties)
+                {
+                    if (actie.CheckboxAnswer == true)
+                    {
+                        viewmodel.gemeente.acties.Add(actie);
+                    }
+
+                }
                 _context.Add(viewmodel.gemeente);
                 await _context.SaveChangesAsync();
-                foreach (var geselecteerdLid in viewmodel.leden)
-                {
-                    if (geselecteerdLid.CheckboxAnswer==true)
-                    {
-                        geselecteerdLid.gemeenteId = viewmodel.gemeente.gemeenteId;
-                        Lid lid = _context.leden.SingleOrDefault(l => l.lidId == geselecteerdLid.lidId);
-                        if (lid != null)
-                        {
-                            lid.gemeenteId = geselecteerdLid.gemeenteId;
-                        }
-                    }
-                    
-                }
             }
             return View(viewmodel);
         }
@@ -89,12 +93,14 @@ namespace ProjectComite.Controllers
             {
                 return NotFound();
             }
-
+            EditGemeenteViewModel viewmodel= new EditGemeenteViewModel();
             var gemeente = await _context.gemeenten.FindAsync(id);
             if (gemeente == null)
             {
                 return NotFound();
             }
+            viewmodel.gemeente = gemeente;
+            viewmodel.acties = _context.acties.ToList();
             return View(gemeente);
         }
 

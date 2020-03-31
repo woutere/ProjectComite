@@ -12,7 +12,7 @@ namespace ProjectComite.Models
         public string naam { get; set; }
         public string postcode { get; set; }
         public ICollection<Lid> leden { get; set; }
-        public ICollection<ActieGemeente> acties { get; set; }
+        public ICollection<Actie> acties { get; set; }
         [NotMapped]
         public bool CheckboxAnswer { get; set; }
         //public override string ToString()

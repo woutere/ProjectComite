@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace ProjectComite.ViewModels
 {
-    public class CreateGemeenteViewModel
+    public class CreateActieViewModel
     {
-        public Gemeente gemeente { get; set; }
-        public List<Lid> leden {get;set;}
-        public List<Actie> acties { get; set; }
+        public Actie actie { get; set; }
+        public SelectList gemeentes { get; set; }
+        public List<Lid> leden { get; set; }
     }
 }
