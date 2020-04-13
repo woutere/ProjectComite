@@ -2,7 +2,7 @@
 
 namespace ProjectComite.Migrations
 {
-    public partial class ManyToGemeente : Migration
+    public partial class Manygemeentes : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

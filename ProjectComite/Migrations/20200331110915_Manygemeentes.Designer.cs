@@ -9,8 +9,8 @@ using ProjectComite.data;
 namespace ProjectComite.Migrations
 {
     [DbContext(typeof(ComiteContext))]
-    [Migration("20200328103948_ManyToGemeente")]
-    partial class ManyToGemeente
+    [Migration("20200331110915_Manygemeentes")]
+    partial class Manygemeentes
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

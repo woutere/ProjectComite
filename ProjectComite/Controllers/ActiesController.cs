@@ -84,14 +84,16 @@ namespace ProjectComite
             {
                 return NotFound();
             }
-
+            EditActieViewModel viewmodel = new EditActieViewModel();
             var actie = await _context.acties.FindAsync(id);
             if (actie == null)
             {
                 return NotFound();
             }
-            ViewData["GemeenteId"] = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId", actie.GemeenteId);
-            return View(actie);
+            viewmodel.actie = actie;
+            viewmodel.gemeentes = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId", actie.gemeenteId);
+            viewmodel.leden = _context.leden.ToList();
+            return View(viewmodel);
         }
 
         // POST: Acties/Edit/5
@@ -126,7 +128,7 @@ namespace ProjectComite
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["GemeenteId"] = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId", actie.GemeenteId);
+            ViewData["GemeenteId"] = new SelectList(_context.gemeenten, "gemeenteId", "gemeenteId", actie.gemeenteId);
             return View(actie);
         }
 

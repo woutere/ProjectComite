@@ -33,15 +33,33 @@ namespace ProjectComite.Controllers
             {
                 return NotFound();
             }
-
+            DetailGemeenteViewModel viewmodel = new DetailGemeenteViewModel();
             var gemeente = await _context.gemeenten
                 .FirstOrDefaultAsync(m => m.gemeenteId == id);
             if (gemeente == null)
             {
                 return NotFound();
             }
-
-            return View(gemeente);
+            viewmodel.gemeente = gemeente;
+            viewmodel.acties = new List<Actie>();
+            List<Actie> acties = _context.acties.ToList();
+            foreach (var actie in acties)
+            {
+                if (_context.acties.Any(a => a.gemeenteId == id && a.actieId == actie.actieId))
+                {
+                    viewmodel.acties.Add(actie);
+                }
+            }
+            viewmodel.leden = new List<Lid>();
+            List<Lid> leden = _context.leden.ToList();
+            foreach (var lid in leden)
+            {
+                if (_context.leden.Any(l => l.gemeenteId == id && l.lidId == lid.lidId))
+                {
+                    viewmodel.leden.Add(lid);
+                }
+            }
+            return View(viewmodel);
         }
 
         // GET: Gemeenten/Create
@@ -63,25 +81,29 @@ namespace ProjectComite.Controllers
         {
             if (ModelState.IsValid)
             {
-                viewmodel.gemeente.leden = new List<Lid>();
-                foreach (Lid lid in viewmodel.leden)
-                {
-                    if (lid.CheckboxAnswer == true)
-                    {
-                        viewmodel.gemeente.leden.Add(lid);
-                    }
-                    viewmodel.gemeente.acties = new List<Actie>();
-                }
-                foreach (Actie actie in viewmodel.acties)
-                {
-                    if (actie.CheckboxAnswer == true)
-                    {
-                        viewmodel.gemeente.acties.Add(actie);
-                    }
-
-                }
                 _context.Add(viewmodel.gemeente);
                 await _context.SaveChangesAsync();
+                //Gemeente gemeente = _context.gemeenten.SingleOrDefault(x => x.gemeenteId == viewmodel.gemeente.gemeenteId);
+                //viewmodel.gemeente.leden = new List<Lid>();
+                //foreach (Lid lid in viewmodel.leden)
+                //{
+                //    if (lid.CheckboxAnswer == true)
+                //    {
+                //        viewmodel.gemeente.leden.Add(lid);
+                //    }
+
+                //}
+                //viewmodel.gemeente.acties = new List<Actie>();
+                //foreach (Actie actie in viewmodel.acties)
+                //{
+                //    if (actie.CheckboxAnswer == true)
+                //    {
+                //        viewmodel.gemeente.acties.Add(actie);
+                //    }
+
+                //}
+                //_context.Add(viewmodel.gemeente);
+                //await _context.SaveChangesAsync();
             }
             return View(viewmodel);
         }
@@ -101,7 +123,22 @@ namespace ProjectComite.Controllers
             }
             viewmodel.gemeente = gemeente;
             viewmodel.acties = _context.acties.ToList();
-            return View(gemeente);
+            foreach (var actie in viewmodel.acties)
+            {
+                if (_context.acties.Any(a=>a.gemeenteId==id&& a.actieId==actie.actieId))
+                {
+                    actie.CheckboxAnswer = true;
+                }
+            }
+            viewmodel.leden = _context.leden.ToList();
+            foreach (var lid in viewmodel.leden)
+            {
+                if (_context.leden.Any(l => l.gemeenteId == id&& l.lidId==lid.lidId))
+                {
+                    lid.CheckboxAnswer = true;
+                }
+            }
+            return View(viewmodel);
         }
 
         // POST: Gemeenten/Edit/5
@@ -109,9 +146,9 @@ namespace ProjectComite.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("gemeenteId,naam,postcode")] Gemeente gemeente)
+        public async Task<IActionResult> Edit(int id, EditGemeenteViewModel viewmodel)
         {
-            if (id != gemeente.gemeenteId)
+            if (id != viewmodel.gemeente.gemeenteId)
             {
                 return NotFound();
             }
@@ -120,12 +157,32 @@ namespace ProjectComite.Controllers
             {
                 try
                 {
-                    _context.Update(gemeente);
+                    viewmodel.gemeente.leden = new List<Lid>();
+                    foreach (Lid lid in viewmodel.leden)
+                    {
+                        if (lid.CheckboxAnswer == true)
+                        {
+                            lid.gemeenteId = id;
+                            viewmodel.gemeente.leden.Add(lid);
+                        }
+
+                    }
+                    viewmodel.gemeente.acties = new List<Actie>();
+                    foreach (Actie actie in viewmodel.acties)
+                    {
+                        if (actie.CheckboxAnswer == true)
+                        {
+                            actie.gemeenteId = id;
+                            viewmodel.gemeente.acties.Add(actie);
+                        }
+
+                    }
+                    _context.Update(viewmodel.gemeente);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GemeenteExists(gemeente.gemeenteId))
+                    if (!GemeenteExists(viewmodel.gemeente.gemeenteId))
                     {
                         return NotFound();
                     }
@@ -136,7 +193,7 @@ namespace ProjectComite.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(gemeente);
+            return View(viewmodel);
         }
 
         // GET: Gemeenten/Delete/5
@@ -146,14 +203,12 @@ namespace ProjectComite.Controllers
             {
                 return NotFound();
             }
-
             var gemeente = await _context.gemeenten
                 .FirstOrDefaultAsync(m => m.gemeenteId == id);
             if (gemeente == null)
             {
                 return NotFound();
             }
-
             return View(gemeente);
         }
 

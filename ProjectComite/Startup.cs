@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,7 @@ namespace ProjectComite
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            
         }
 
         public IConfiguration Configuration { get; }
@@ -36,10 +38,12 @@ namespace ProjectComite
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<ComiteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ComiteConnection")));
+            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ComiteContext>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env,IServiceProvider services)
         {
             if (env.IsDevelopment())
             {
@@ -55,12 +59,34 @@ namespace ProjectComite
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
+            app.UseAuthentication();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            CreateUserRoles(services).Wait();
+            private async Task CreateUserRoles(IServiceProvider serviceProvider)
+            {
+                var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var Context = serviceProvider.GetRequiredService<ComiteContext>();
+
+                IdentityResult roleResult;
+                //Adding Admin Role
+                var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+                if (!roleCheck)
+                {
+                    roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+                }
+                var user = Context.Users.FirstOrDefaultAsync(u => u.Email=="woutereilers@hotmail.com");
+                if (user != null)
+                {
+                    var roles = Context.UserRoles
+                }
+            }
         }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿@model ProjectComite.Models.Actie
+﻿@model ProjectComite.ViewModels.EditActieViewModel
 
 @{
     ViewData["Title"] = "Edit";
@@ -12,21 +12,21 @@
     <div class="col-md-4">
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="actieId" />
+            <input type="hidden" asp-for="actie.actieId" />
             <div class="form-group">
-                <label asp-for="naam" class="control-label"></label>
-                <input asp-for="naam" class="form-control" />
-                <span asp-validation-for="naam" class="text-danger"></span>
+                <label asp-for="actie.naam" class="control-label"></label>
+                <input asp-for="actie.naam" class="form-control" />
+                <span asp-validation-for="actie.naam" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="informatie" class="control-label"></label>
-                <input asp-for="informatie" class="form-control" />
-                <span asp-validation-for="informatie" class="text-danger"></span>
+                <label asp-for="actie.informatie" class="control-label"></label>
+                <input asp-for="actie.informatie" class="form-control" />
+                <span asp-validation-for="actie.informatie" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="GemeenteId" class="control-label"></label>
-                <select asp-for="GemeenteId" class="form-control" asp-items="ViewBag.GemeenteId"></select>
-                <span asp-validation-for="GemeenteId" class="text-danger"></span>
+                <label asp-for="actie.gemeenteId" class="control-label"></label>
+                <select asp-for="actie.gemeenteId" class="form-control" asp-items="ViewBag.gemeenteId"></select>
+                <span asp-validation-for="actie.gemeenteId" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-default" />

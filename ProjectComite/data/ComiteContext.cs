@@ -1,9 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using ProjectComite.Models;
 
 namespace ProjectComite.data
 {
-    public class ComiteContext :DbContext
+
+    public class ComiteContext :IdentityDbContext<IdentityUser>
     {
         public ComiteContext(DbContextOptions<ComiteContext> options) : base(options)
         {
@@ -18,10 +21,10 @@ namespace ProjectComite.data
         
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Lid>().ToTable("Lid");
-            modelBuilder.Entity<Gemeente>().ToTable("Gemeente").HasMany(l=> l.leden).WithOne(g=>g.gemeente);
-            modelBuilder.Entity<Gemeente>().HasMany(a => a.acties).WithOne(g => g.gemeente);
-            modelBuilder.Entity<Actie>().ToTable("Actie");
+            modelBuilder.Entity<Lid>().ToTable("Lid").HasOne(g => g.gemeente);
+            modelBuilder.Entity<Gemeente>().ToTable("Gemeente");
+            //modelBuilder.Entity<Gemeente>().HasMany(a => a.acties);
+            modelBuilder.Entity<Actie>().ToTable("Actie").HasOne(g=>g.gemeente);
             modelBuilder.Entity<ActieLid>().ToTable("ActieLid");
             base.OnModelCreating(modelBuilder);
             
