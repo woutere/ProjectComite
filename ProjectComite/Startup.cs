@@ -38,8 +38,9 @@ namespace ProjectComite
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<ComiteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ComiteConnection")));
-            services.AddDefaultIdentity<IdentityUser>().AddEntityFrameworkStores<ComiteContext>();
-            
+            services.AddDefaultIdentity<IdentityUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ComiteContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -68,25 +69,34 @@ namespace ProjectComite
             });
 
             CreateUserRoles(services).Wait();
-            private async Task CreateUserRoles(IServiceProvider serviceProvider)
-            {
-                var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-                var Context = serviceProvider.GetRequiredService<ComiteContext>();
+        }
 
-                IdentityResult roleResult;
-                //Adding Admin Role
-                var roleCheck = await RoleManager.RoleExistsAsync("Admin");
-                if (!roleCheck)
+        private async Task CreateUserRoles(IServiceProvider serviceProvider)
+        {
+            var RoleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+            var Context = serviceProvider.GetRequiredService<ComiteContext>();
+
+            IdentityResult roleResult;
+            //Adding Admin Role
+            var roleCheck = await RoleManager.RoleExistsAsync("Admin");
+            if (!roleCheck)
+            {
+                roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+            var user = await Context.Users.FirstOrDefaultAsync(u => u.Email == "woutereilers@hotmail.com");
+            if (user != null)
+            {
+                var roles = Context.UserRoles;
+                var adminRole = Context.Roles.FirstOrDefault(r => r.Name == "Admin");
+                if (adminRole != null)
                 {
-                    roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
-                }
-                var user = Context.Users.FirstOrDefaultAsync(u => u.Email=="woutereilers@hotmail.com");
-                if (user != null)
-                {
-                    var roles = Context.UserRoles
+                    if (!roles.Any(ur => ur.UserId == user.Id && ur.RoleId == adminRole.Id))
+                    {
+                        roles.Add(new IdentityUserRole<string>() { UserId = user.Id, RoleId = adminRole.Id });
+                        Context.SaveChanges();
+                    }
                 }
             }
         }
-
     }
 }
