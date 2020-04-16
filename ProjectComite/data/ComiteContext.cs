@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using ProjectComite.Areas.Identity.Data;
 using ProjectComite.Models;
 
 namespace ProjectComite.data
 {
 
-    public class ComiteContext :IdentityDbContext<IdentityUser>
+    public class ComiteContext :IdentityDbContext<CustomUser>
     {
         public ComiteContext(DbContextOptions<ComiteContext> options) : base(options)
         {

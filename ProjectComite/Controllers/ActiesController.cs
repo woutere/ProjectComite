@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using ProjectComite.Models;
 using ProjectComite.data;
 using ProjectComite.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProjectComite
 {
+    [Authorize]
     public class ActiesController : Controller
     {
         private readonly ComiteContext _context;
@@ -21,6 +23,7 @@ namespace ProjectComite
         }
 
         // GET: Acties
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             var comiteContext = _context.acties.Include(a => a.gemeente);
@@ -28,6 +31,7 @@ namespace ProjectComite
         }
 
         // GET: Acties/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,6 +51,7 @@ namespace ProjectComite
         }
 
         // GET: Acties/Create
+        [Authorize(Roles = "Admin")]
         public IActionResult Create()
         {
             CreateActieViewModel viewmodel = new CreateActieViewModel();
@@ -78,6 +83,7 @@ namespace ProjectComite
         }
 
         // GET: Acties/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -133,6 +139,7 @@ namespace ProjectComite
         }
 
         // GET: Acties/Delete/5
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)

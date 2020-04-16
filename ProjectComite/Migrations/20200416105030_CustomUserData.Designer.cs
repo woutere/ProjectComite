@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProjectComite.data;
 
 namespace ProjectComite.Migrations
 {
     [DbContext(typeof(ComiteContext))]
-    partial class ComiteContextModelSnapshot : ModelSnapshot
+    [Migration("20200416105030_CustomUserData")]
+    partial class CustomUserData
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -154,7 +156,7 @@ namespace ProjectComite.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
-                    b.Property<string>("Naam");
+                    b.Property<string>("Naaam");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);

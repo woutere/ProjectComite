@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using ProjectComite.Models;
 using ProjectComite.data;
 using ProjectComite.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ProjectComite.Controllers
 {
+    [Authorize]
     public class LedenController : Controller
     {
         private readonly ComiteContext _context;
@@ -50,7 +52,7 @@ namespace ProjectComite.Controllers
                                                select s).ToList();
             return View(viewmodel);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Leden/Create
         public IActionResult Create()
         {
@@ -82,7 +84,7 @@ namespace ProjectComite.Controllers
             }
             return View(viewmodel);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Leden/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -164,7 +166,7 @@ namespace ProjectComite.Controllers
 
             return View(viewmodel);
         }
-
+        [Authorize(Roles = "Admin")]
         // GET: Leden/Delete/5
         public async Task<IActionResult> Delete(int? id, DeleteLidViewModel viewmodel)
         {
