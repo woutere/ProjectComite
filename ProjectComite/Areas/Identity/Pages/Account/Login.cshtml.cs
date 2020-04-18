@@ -47,10 +47,6 @@ namespace ProjectComite.Areas.Identity.Pages.Account
 
             [Display(Name = "Remember me?")]
             public bool RememberMe { get; set; }
-            [PersonalData]
-            public string Naam { get; set; }
-            [PersonalData]
-            public DateTime GeboorteDatum { get; set; }
         }
 
         public async Task OnGetAsync(string returnUrl = null)
