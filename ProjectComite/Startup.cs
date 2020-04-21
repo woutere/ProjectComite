@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using ProjectComite.Areas.Identity.Data;
 using ProjectComite.data;
 
 namespace ProjectComite
@@ -38,7 +39,7 @@ namespace ProjectComite
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<ComiteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ComiteConnection")));
-            services.AddDefaultIdentity<IdentityUser>()
+            services.AddDefaultIdentity<CustomUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ComiteContext>();
         }
@@ -82,6 +83,11 @@ namespace ProjectComite
             if (!roleCheck)
             {
                 roleResult = await RoleManager.CreateAsync(new IdentityRole("Admin"));
+            }
+            roleCheck = await RoleManager.RoleExistsAsync("Lid");
+            if (!roleCheck)
+            {
+                roleResult = await RoleManager.CreateAsync(new IdentityRole("Lid"));
             }
             var user = await Context.Users.FirstOrDefaultAsync(u => u.Email == "woutereilers@hotmail.com");
             if (user != null)
