@@ -85,6 +85,7 @@ namespace ProjectComite.Controllers
             {
                 _context.Add(viewmodel.gemeente);
                 await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
                 //Gemeente gemeente = _context.gemeenten.SingleOrDefault(x => x.gemeenteId == viewmodel.gemeente.gemeenteId);
                 //viewmodel.gemeente.leden = new List<Lid>();
                 //foreach (Lid lid in viewmodel.leden)
@@ -211,6 +212,8 @@ namespace ProjectComite.Controllers
             {
                 return NotFound();
             }
+            gemeente.leden=new List<Lid>(from l in _context.leden where l.lidId== gemeente.gemeenteId select l).ToList();
+            gemeente.acties = new List<Actie>(from a in _context.acties where a.actieId == gemeente.gemeenteId select a).ToList();
             return View(gemeente);
         }
 

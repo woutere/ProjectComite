@@ -31,9 +31,16 @@
                 @Html.DisplayFor(modelItem => item.postcode)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.gemeenteId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.gemeenteId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.gemeenteId">Delete</a>
+                @if (this.User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.gemeenteId">Edit</a>
+                }
+                <a asp-action="Details" asp-route-id="@item.gemeenteId">Details</a> 
+                @if (this.User.IsInRole("Admin"))
+                {
+
+                    <a asp-action="Delete" asp-route-id="@item.gemeenteId">Delete</a>
+                }
             </td>
         </tr>
 }

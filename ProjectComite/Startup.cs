@@ -39,9 +39,14 @@ namespace ProjectComite
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddDbContext<ComiteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ComiteConnection")));
-            services.AddDefaultIdentity<CustomUser>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ComiteContext>();
+            services.AddIdentity<CustomUser, IdentityRole>().
+                AddRoleManager<RoleManager<IdentityRole>>().
+                AddDefaultUI().
+                AddDefaultTokenProviders().
+                AddEntityFrameworkStores<ComiteContext>();
+            //services.AddDefaultIdentity<CustomUser>()
+            //    .AddRoles<IdentityRole>()
+            //    .AddEntityFrameworkStores<ComiteContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -89,7 +94,21 @@ namespace ProjectComite
             {
                 roleResult = await RoleManager.CreateAsync(new IdentityRole("Lid"));
             }
-            var user = await Context.Users.FirstOrDefaultAsync(u => u.Email == "woutereilers@hotmail.com");
+            var user = await Context.Users.FirstOrDefaultAsync(u => u.Email == "limmy@hotmail.com");
+            if (user != null)
+            {
+                var roles = Context.UserRoles;
+                var adminRole = Context.Roles.FirstOrDefault(r => r.Name == "Lid");
+                if (adminRole != null)
+                {
+                    if (!roles.Any(ur => ur.UserId == user.Id && ur.RoleId == adminRole.Id))
+                    {
+                        roles.Add(new IdentityUserRole<string>() { UserId = user.Id, RoleId = adminRole.Id });
+                        Context.SaveChanges();
+                    }
+                }
+            }
+            user= await Context.Users.FirstOrDefaultAsync(u => u.Email == "woutereilers@hotmail.com");
             if (user != null)
             {
                 var roles = Context.UserRoles;

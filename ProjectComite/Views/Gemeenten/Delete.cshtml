@@ -23,8 +23,10 @@
         <dd>
             @Html.DisplayFor(model => model.postcode)
         </dd>
+        
     </dl>
-    
+    <p>Delete werkt enkel als gemeente geen acties of leden meer bevat!</p>
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="gemeenteId" />
         <input type="submit" value="Delete" class="btn btn-default" /> |

@@ -19,9 +19,13 @@
                 @Html.DisplayNameFor(model => model.gemeente)
             </th>
             @* Alleen zichtbaar voor admins maken *@
-            <th>
-                @Html.DisplayNameFor(model => model.lidgeldBetaald)
-            </th>
+            @if (this.User.IsInRole("Admin"))
+            {
+                <th>
+                    @Html.DisplayNameFor(model => model.lidgeldBetaald)
+                </th>
+            }
+
             <th>
                 @Html.DisplayNameFor(model => model.emailAdres)
             </th>
@@ -40,21 +44,35 @@
                 @Html.DisplayFor(modelItem => item.gemeente.naam)
             </td>
             @* Alleen zichtbaar voor admins maken *@
-            <td>
-                @Html.DisplayFor(modelItem => item.lidgeldBetaald)
-            </td>
+            @if (this.User.IsInRole("Admin"))
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.lidgeldBetaald)
+                </td>
+            }
+
             <td>
                 @Html.DisplayFor(modelItem => item.emailAdres)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.telefoonnummer)
             </td>
+
             <td>
-                <a asp-action="Edit" asp-route-id="@item.lidId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.lidId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.lidId">Delete</a>
+                @if (this.User.IsInRole("Admin"))
+                {
+                    <a asp-action="Edit" asp-route-id="@item.lidId">Edit</a>
+                }
+                
+                <a asp-action="Details" asp-route-id="@item.lidId">Details</a> 
+                @if (this.User.IsInRole("Admin"))
+                {
+
+                    <a asp-action="Delete" asp-route-id="@item.lidId">Delete</a>
+                }
+
             </td>
-        </tr>
+            </tr>
 }
     </tbody>
 </table>

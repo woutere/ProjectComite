@@ -10,7 +10,6 @@ namespace ProjectComite.ViewModels
     public class DeleteLidViewModel
     {
         public Lid lid { get; set; }
-        public Gemeente gemeente { get; set; }
         public List<Actie> acties { get; set; }
     }
 }

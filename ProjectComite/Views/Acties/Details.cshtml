@@ -1,4 +1,4 @@
-﻿@model ProjectComite.Models.Actie
+﻿@model ProjectComite.ViewModels.DetailActieViewModel
 
 @{
     ViewData["Title"] = "Details";
@@ -11,26 +11,32 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.naam)
+            @Html.DisplayNameFor(model => model.actie.naam)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.naam)
+            @Html.DisplayFor(model => model.actie.naam)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.informatie)
+            @Html.DisplayNameFor(model => model.actie.informatie)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.informatie)
+            @Html.DisplayFor(model => model.actie.informatie)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.gemeente)
+            @Html.DisplayNameFor(model => model.actie.gemeente)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.gemeente.gemeenteId)
+            @Html.DisplayFor(model => model.actie.gemeente.naam)
         </dd>
+        <dt>Leden</dt>
+        @for (int i = 0; i < Model.leden.Count; i++)
+        {
+            <dd>°@Html.DisplayFor(model => model.leden[i].naam) <a asp-controller="Leden" asp-action="Details" asp-route-id="@Model.leden[i].lidId"> details</a></dd>
+
+        }
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.actieId">Edit</a> |
+    <a asp-action="Edit" asp-route-id="@Model.actie.actieId">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
