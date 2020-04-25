@@ -169,7 +169,7 @@ namespace ProjectComite
 
         // GET: Acties/Delete/5
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id,DeleteActieViewModel viewmodel)
         {
             if (id == null)
             {
@@ -183,17 +183,26 @@ namespace ProjectComite
             {
                 return NotFound();
             }
-
-            return View(actie);
+            viewmodel.actie = actie;
+            viewmodel.leden = new List<Lid>(from s in _context.leden
+                                            join ss in _context.actieleden on s.lidId equals ss.lidId
+                                            where ss.actieId == id
+                                            select s).ToList();
+            return View(viewmodel);
         }
 
         // POST: Acties/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, DeleteActieViewModel viewmodel)
         {
             var actie = await _context.acties.FindAsync(id);
             _context.acties.Remove(actie);
+            foreach (var lid in viewmodel.leden)
+            {
+                ActieLid actieLid = _context.actieleden.FirstOrDefault(al => al.lidId == lid.lidId && al.actieId == viewmodel.actie.actieId);
+                _context.Remove(actieLid);
+            }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

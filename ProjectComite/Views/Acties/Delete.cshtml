@@ -1,7 +1,7 @@
-﻿@model ProjectComite.Models.Actie
+﻿@model ProjectComite.ViewModels.DeleteActieViewModel
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Delete acties "+Model.actie.naam;
 }
 
 <h2>Delete</h2>
@@ -12,27 +12,27 @@
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.naam)
+            @Html.DisplayNameFor(model => model.actie.naam)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.naam)
+            @Html.DisplayFor(model => model.actie.naam)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.informatie)
+            @Html.DisplayNameFor(model => model.actie.informatie)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.informatie)
+            @Html.DisplayFor(model => model.actie.informatie)
         </dd>
         <dt>
-            @Html.DisplayNameFor(model => model.gemeente)
+            @Html.DisplayNameFor(model => model.actie.gemeente)
         </dt>
         <dd>
-            @Html.DisplayFor(model => model.gemeente.gemeenteId)
+            @Html.DisplayFor(model => model.actie.gemeente.gemeenteId)
         </dd>
     </dl>
     
     <form asp-action="Delete">
-        <input type="hidden" asp-for="actieId" />
+        <input type="hidden" asp-for="actie.actieId" />
         <input type="submit" value="Delete" class="btn btn-default" /> |
         <a asp-action="Index">Back to List</a>
     </form>
