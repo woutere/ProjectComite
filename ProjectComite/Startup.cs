@@ -13,6 +13,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using ProjectComite.Areas.Identity.Data;
 using ProjectComite.data;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace ProjectComite
 {
@@ -47,6 +48,7 @@ namespace ProjectComite
             //services.AddDefaultIdentity<CustomUser>()
             //    .AddRoles<IdentityRole>()
             //    .AddEntityFrameworkStores<ComiteContext>();
+            //services.AddSwaggerGen(c => { "v1", new Info { Title = " My API", Version = "v1" } });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -75,6 +77,11 @@ namespace ProjectComite
             });
 
             CreateUserRoles(services).Wait();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API VA");
+            });
         }
 
         private async Task CreateUserRoles(IServiceProvider serviceProvider)
