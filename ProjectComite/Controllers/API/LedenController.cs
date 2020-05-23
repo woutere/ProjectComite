@@ -22,7 +22,7 @@ namespace ProjectComite.Controllers.API
         }
 
         // GET: api/Leden
-        [HttpGet("leden")]
+        [HttpGet]
         public IEnumerable<Lid> Getleden()
         {
             return _context.leden;
@@ -62,9 +62,9 @@ namespace ProjectComite.Controllers.API
             }
 
             _context.Entry(lid).State = EntityState.Modified;
-
             try
             {
+
                 await _context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
