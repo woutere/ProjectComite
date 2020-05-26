@@ -18,6 +18,7 @@ using Microsoft.IdentityModel.Tokens;
 using ProjectComite.Areas.Identity.Data;
 using ProjectComite.data;
 using ProjectComite.Helpers;
+using ProjectComite.Models;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace ProjectComite
@@ -92,6 +93,8 @@ namespace ProjectComite
                     ValidateAudience = false
                 };
             });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

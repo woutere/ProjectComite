@@ -16,6 +16,7 @@ namespace ProjectComite.Controllers
     public class LedenController : Controller
     {
         private readonly ComiteContext _context;
+        
 
         public LedenController(ComiteContext context)
         {

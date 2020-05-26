@@ -61,7 +61,7 @@ namespace ProjectComite.Controllers.API
                 return BadRequest();
             }
 
-            _context.Entry(lid).State = EntityState.Modified;
+            _context.leden.Update(lid);
             try
             {
 
