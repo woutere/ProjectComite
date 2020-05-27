@@ -19,6 +19,7 @@ using ProjectComite.Areas.Identity.Data;
 using ProjectComite.data;
 using ProjectComite.Helpers;
 using ProjectComite.Models;
+using ProjectComite.Services;
 using Swashbuckle.AspNetCore.Swagger;
 
 namespace ProjectComite
@@ -93,6 +94,7 @@ namespace ProjectComite
                     ValidateAudience = false
                 };
             });
+            services.AddScoped<IUserService, UserService>();
 
 
         }

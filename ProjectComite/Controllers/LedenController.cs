@@ -9,10 +9,11 @@ using ProjectComite.Models;
 using ProjectComite.data;
 using ProjectComite.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ProjectComite.Controllers
 {
-    [Authorize]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class LedenController : Controller
     {
         private readonly ComiteContext _context;

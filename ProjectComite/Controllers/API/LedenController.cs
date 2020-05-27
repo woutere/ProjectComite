@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProjectComite.Models;
 using ProjectComite.data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace ProjectComite.Controllers.API
 {
@@ -23,6 +25,7 @@ namespace ProjectComite.Controllers.API
 
         // GET: api/Leden
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IEnumerable<Lid> Getleden()
         {
             return _context.leden;
