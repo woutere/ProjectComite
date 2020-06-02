@@ -15,6 +15,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using ProjectComite.Areas.Identity.Data;
 using ProjectComite.data;
 using ProjectComite.Helpers;
@@ -33,7 +35,7 @@ namespace ProjectComite
         }
 
         public IConfiguration Configuration { get; }
-
+        readonly String AllowAllOrigins = "_myAllowAllOrigins";
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
@@ -44,8 +46,14 @@ namespace ProjectComite
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
 
+            
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                .AddJsonOptions(options => {
+                    //options.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+                });
             services.AddDbContext<ComiteContext>(options => options.UseSqlServer(Configuration.GetConnectionString("ComiteConnection")));
             services.AddIdentity<CustomUser, IdentityRole>().
                 AddRoleManager<RoleManager<IdentityRole>>().
@@ -95,7 +103,8 @@ namespace ProjectComite
                 };
             });
             services.AddScoped<IUserService, UserService>();
-
+            services.AddCors(c =>
+            { c.AddPolicy(AllowAllOrigins, options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod()); });
 
         }
 
@@ -111,7 +120,7 @@ namespace ProjectComite
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
-
+            app.UseCors(AllowAllOrigins);
             app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseCookiePolicy();

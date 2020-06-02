@@ -25,10 +25,11 @@ namespace ProjectComite.Controllers.API
 
         // GET: api/Leden
         [HttpGet]
-        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IEnumerable<Lid> Getleden()
         {
-            return _context.leden;
+            return _context.leden.Include(l => l.gemeente).ThenInclude(g => g.leden).ToList();
+            //return _context.leden.Include(l => l.actieleden).ToList();
         }
 
         // GET: api/Leden/5
