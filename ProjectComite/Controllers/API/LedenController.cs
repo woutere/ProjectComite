@@ -24,16 +24,17 @@ namespace ProjectComite.Controllers.API
         }
 
         // GET: api/Leden
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpGet]
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public IEnumerable<Lid> Getleden()
         {
-            return _context.leden.Include(l => l.gemeente).ThenInclude(g => g.leden).ToList();
+            return _context.leden;/*.Include(l => l.gemeente).ThenInclude(g => g.leden).ToList();*/
             //return _context.leden.Include(l => l.actieleden).ToList();
         }
 
         // GET: api/Leden/5
-        [HttpGet("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+        [HttpGet("{id}")]        
         public async Task<IActionResult> GetLid([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -52,6 +53,7 @@ namespace ProjectComite.Controllers.API
         }
 
         // PUT: api/Leden/5
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPut("{id}")]
         public async Task<IActionResult> PutLid([FromRoute] int id, [FromBody] Lid lid)
         {
@@ -87,6 +89,7 @@ namespace ProjectComite.Controllers.API
         }
 
         // POST: api/Leden
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpPost]
         public async Task<IActionResult> PostLid([FromBody] Lid lid)
         {
@@ -102,6 +105,7 @@ namespace ProjectComite.Controllers.API
         }
 
         // DELETE: api/Leden/5
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteLid([FromRoute] int id)
         {
